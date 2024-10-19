@@ -3,6 +3,9 @@ import { ILawyer } from "../interfaces/lawyer.interface"
 import { mockApi } from "../services/api"
 import { toast } from "react-toastify"
 import { useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query"
+import { createLawyer } from "../services/mockApi"
+import { Button } from "antd"
 
 export const CreateLawyer = () => {
   const navigation = useNavigate();
@@ -14,6 +17,13 @@ export const CreateLawyer = () => {
     location: ''
   })
 
+
+  const { data, isLoading, isError, mutateAsync } = useMutation({
+    mutationFn: (newLayer: ILawyer) => {
+      return createLawyer(newLayer)
+    },
+  })
+
   const onChangeForm = (name: string, value: string) => {
     setFormLawyer(formLawyer => ({
       ...formLawyer,
@@ -22,12 +32,18 @@ export const CreateLawyer = () => {
   }
 
   const onSubmit = () => {
-    mockApi.post('/users/lawyers', formLawyer).then(response => {
-      console.log("response", response);
-      toast.success("Se ha creado correctamente el abogado");
+    mutateAsync(formLawyer).then(() => {
       navigation("/")
     })
+    // mockApi.post('/users/lawyers', formLawyer).then(response => {
+    //   console.log("response", response);
+    //   toast.success("Se ha creado correctamente el abogado");
+    //   navigation("/")
+    // })
   }
+
+  console.log("data", data);
+  console.log("isLoading", isLoading);
 
   return <div className="border bg-gray-400 flex flex-col items-center gap-2">
       <input value={formLawyer.firstName} 
@@ -48,6 +64,6 @@ export const CreateLawyer = () => {
       <input 
         onChange={(e) => onChangeForm("location", e.target.value)}
         value={formLawyer.location} type="text" placeholder="Location"/>
-      <button className="bg-blue-600 rounded-lg p-2 text-white" onClick={() => onSubmit()}>Create Lawyer</button>
+      <Button loading={isLoading}  className="bg-blue-600 rounded-lg p-2 text-white" onClick={() => onSubmit()}>Create Lawyer</Button>
   </div>
 }
