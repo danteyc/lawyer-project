@@ -4,6 +4,10 @@ export const mockApi = axios.create({
   baseURL: 'https://67105db3a85f4164ef2dbdd3.mockapi.io/api'
 })
 
+export const jsonPlaceholderApi = axios.create({
+  baseURL: 'https://jsonplaceholder.typicode.com'
+})
+
 // mockApi.interceptors.request.use(function (config) {
 //   // Do something before request is sent
 //   const token = 'xas12312321'

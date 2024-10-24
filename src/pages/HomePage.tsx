@@ -7,21 +7,33 @@ import { Card } from "../components/Card";
 // import { mockApi } from "../services/api";
 import { useQuery } from "@tanstack/react-query";
 import { getLawyer, getLawyers } from "../services/mockApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { locationOptions, specialityOptions } from "../utils/options";
+import { getUser } from "../services/users/users.api";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../store/slices/userSlice";
+import { setFilters } from "../store/slices/filtersSlice";
+import { RootState } from "../store/store";
 
 export const HomePage = () => {
   // const [isActive, setIsActive] = useState(false);
+  const dispatch = useDispatch();
+  const filters = useSelector((state: RootState) => state.filters);
+
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState({
-    location: "1",
-    speciality: "1",
-  });
+  // const [filters, setFilters] = useState({
+  //   location: "1",
+  //   speciality: "1",
+  // });
   const handleChange = (name: "location" | "speciality", value: string) => {
-    setFilters((filters) => ({
+    dispatch(setFilters({
       ...filters,
-      [name]: value,
-    }));
+      [name]: value
+    }))
+    // setFilters((filters) => ({
+    //   ...filters,
+    //   [name]: value,
+    // }));
   };
 
   const {
@@ -34,7 +46,22 @@ export const HomePage = () => {
     staleTime: 20 * 60 * 1000,
   });
 
-  const {data: dataSingleLawyer} = useQuery(["getSingleLawyer"], () => getLawyer("1"))
+  const {data: dataSingleLawyer} = useQuery(["getSingleLawyer"], () => getLawyer("1"));
+
+  useEffect(() => {
+    getUser("1").then((data) => {
+      console.log("INFORMACION DEL USUARIO DE API JSONPLACEHOLDER",data);
+      dispatch(login({
+        name: data.name,
+        email: data.email,
+        role: "admin",
+        id: data.id,
+        phone: data.phone
+      }))
+    })
+  },[])
+
+  console.log("filters", filters);
 
   return (
     <div className="w-full">

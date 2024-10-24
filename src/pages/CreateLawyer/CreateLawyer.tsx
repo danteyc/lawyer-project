@@ -11,9 +11,15 @@ import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { useFormik } from "formik";
 import { initialValues, LawyerSchema } from "./createLawyer.form";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 export const CreateLawyer = () => {
   const navigation = useNavigate();
+  const filters = useSelector((state: RootState) => state.filters);
+  const user = useSelector((state: RootState) => state.user);
+
+
 
   const formik = useFormik({
     initialValues,
@@ -86,6 +92,8 @@ export const CreateLawyer = () => {
           items={items}
           style={{ flex: 1, minWidth: 0 }}
         />
+        <p className="text-white">{user.name}</p>
+
       </Header>
       <Content style={{ padding: "0 48px" }}>
         <Breadcrumb style={{ margin: "16px 0" }}>
@@ -112,6 +120,10 @@ export const CreateLawyer = () => {
             className="bg-white"
           >
             <div className="flex flex-col items-center gap-2 ">
+              <p>Filters</p>
+              <p>Speciality: {filters.speciality}</p>
+              <p>Location: {filters.location} </p>
+              
               <form onSubmit={handleSubmit} className="flex flex-col gap-2">
                 {/* <input
                   // value={formLawyer.firstName}
