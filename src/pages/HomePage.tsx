@@ -7,11 +7,13 @@ import { Card } from "../components/Card";
 // import { mockApi } from "../services/api";
 import { useQuery } from "@tanstack/react-query";
 import { getLawyer, getLawyers } from "../services/mockApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { locationOptions, specialityOptions } from "../utils/options";
+import { useStore } from "../store/store";
 
 export const HomePage = () => {
   // const [isActive, setIsActive] = useState(false);
+  const {login} = useStore();
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({
     location: "1",
@@ -29,12 +31,29 @@ export const HomePage = () => {
     isError,
     error,
     isFetching: isLoading,
-  } = useQuery(["getLawyers",page, filters], () => getLawyers(), {
+  } = useQuery(["getLawyers", page, filters], () => getLawyers(), {
     // refetchInterval: .1 * 60 * 1000
     staleTime: 20 * 60 * 1000,
   });
 
-  const {data: dataSingleLawyer} = useQuery(["getSingleLawyer"], () => getLawyer("1"))
+  const { data: dataSingleLawyer } = useQuery(["getSingleLawyer"], () =>
+    getLawyer("1")
+  );
+
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users/1")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data from API", data);
+        login({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          role: "admin",
+        })
+      });
+  }, []);
 
   return (
     <div className="w-full">
@@ -68,7 +87,12 @@ export const HomePage = () => {
         </div>
       </section>
       <div>
-        <Pagination total={20} pageSize={2} defaultCurrent={1} onChange={(page) => setPage(page)} />
+        <Pagination
+          total={20}
+          pageSize={2}
+          defaultCurrent={1}
+          onChange={(page) => setPage(page)}
+        />
       </div>
 
       {isLoading ? (

@@ -1,4 +1,8 @@
+import { useStore } from "../store/store";
+
 export const Header = () => {
+  const {user, logout} = useStore();
+
   return (
     <div
       id="header"
@@ -12,6 +16,7 @@ export const Header = () => {
         />
       </div>
       <nav>
+        Usuario: {user.name}
         <ul className="flex gap-2 text-white">
           <li>
             <a href="">Inicio</a>
@@ -21,6 +26,9 @@ export const Header = () => {
           </li>
           <li>
             <a href="">Contacto</a>
+          </li>
+          <li>
+            <a onClick={() => logout()}>Cerrar sesión</a>
           </li>
         </ul>
       </nav>
