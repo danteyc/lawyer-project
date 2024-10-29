@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react'
+import { FunctionComponent } from 'react'
 import { FaLocationDot } from "react-icons/fa6";
 import { FaMobileScreen } from "react-icons/fa6";
 import { ILawyer } from '../interfaces/lawyer.interface';
@@ -15,8 +15,8 @@ export const Card: FunctionComponent<ICard> = ({lawyer}) => {
       </div>
       <div className='flex justify-between p-2'>
         <div>
-          <p className='text-sm flex items-center gap-1'><FaLocationDot/> <span>{lawyer.location}</span></p>
-          <p className='text-sm flex items-center gap-1'><FaMobileScreen/> <span>{lawyer.phone}</span></p>
+          <p className='text-sm flex items-center gap-1'><FaLocationDot/> <span>{lawyer.City.name}</span></p>
+          <p className='text-sm flex items-center gap-1'><FaMobileScreen/> <span>{lawyer.phoneNumber}</span></p>
         </div>
         <img className='rounded-full' 
           width={60} 

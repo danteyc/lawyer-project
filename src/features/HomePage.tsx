@@ -6,9 +6,9 @@ import { Card } from "../components/Card";
 // import { toast } from 'react-toastify';
 // import { mockApi } from "../services/api";
 import { useQuery } from "@tanstack/react-query";
-import { getLawyer, getLawyers } from "../services/mockApi";
 import { useState } from "react";
 import { locationOptions, specialityOptions } from "../utils/options";
+import { getLawyers } from "../services/Lawyer";
 
 export const HomePage = () => {
   // const [isActive, setIsActive] = useState(false);
@@ -34,7 +34,9 @@ export const HomePage = () => {
     staleTime: 20 * 60 * 1000,
   });
 
-  const {data: dataSingleLawyer} = useQuery(["getSingleLawyer"], () => getLawyer("1"))
+  console.log("data", data)
+
+  // const {data: dataSingleLawyer} = useQuery(["getSingleLawyer"], () => getLawyer("1"))
 
   return (
     <div className="w-full">
@@ -81,7 +83,7 @@ export const HomePage = () => {
           id="cards"
           className="p-4 grid sm:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-3"
         >
-          {data?.map((lawyer) => (
+          {data?.lawyers.map((lawyer) => (
             <Card key={lawyer.id} lawyer={lawyer} />
           ))}
         </section>

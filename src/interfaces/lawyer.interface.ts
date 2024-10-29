@@ -1,10 +1,21 @@
 export interface ILawyer {
-  createdAt?:  string;
-  firstName:  string;
-  avatar?:     string;
-  lastName:   string;
-  speciality: string;
-  phone:      string;
-  location:   string;
-  id?:         string;
+  id:          number;
+  firstName:   string;
+  lastName:    string;
+  cityId:      number;
+  phoneNumber: string;
+  dni:         string;
+  specialtyId: number;
+  description: string;
+  createdAt:   Date;
+  updatedAt:   Date;
+  City:        ICity;
+  Specialty:   ICity;
+}
+
+export interface ICity {
+  id:        number;
+  name:      string;
+  createdAt: Date;
+  updatedAt: Date;
 }

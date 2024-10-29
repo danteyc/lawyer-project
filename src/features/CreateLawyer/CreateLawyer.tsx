@@ -1,16 +1,19 @@
-import { useState } from "react";
-import { ILawyer } from "../../interfaces/lawyer.interface";
-import { mockApi } from "../../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { createLawyer } from "../../services/mockApi";
-import { Breadcrumb, Button, Input, InputNumber, Layout, Menu, Select } from "antd";
-import { HeaderAdmin } from "../../components/HeaderAdmin";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Breadcrumb,
+  Input,
+  InputNumber,
+  Layout,
+  Menu,
+  Select,
+} from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import { useFormik } from "formik";
 import { initialValues, LawyerSchema } from "./createLawyer.form";
+import { getSpecialties } from "../../services/Specialty";
 
 export const CreateLawyer = () => {
   const navigation = useNavigate();
@@ -22,6 +25,13 @@ export const CreateLawyer = () => {
       console.log("values AL ENVIAR FORMULARIO", values);
     },
   });
+
+  const { data: responseSpecialties } = useQuery(['getSpecialties'], getSpecialties)
+
+  const specialityOptions = responseSpecialties?.specialties?.map((specialty) => ({
+    label: specialty.name,
+    value: specialty.id
+  }))
 
   // const { data, isLoading, isError, mutateAsync } = useMutation({
   //   mutationFn: (newLayer: ILawyer) => {
@@ -42,8 +52,6 @@ export const CreateLawyer = () => {
   //   });
   // };
 
-  // console.log("data", data);
-  // console.log("isLoading", isLoading);
 
   const items = [
     {
@@ -70,10 +78,6 @@ export const CreateLawyer = () => {
     setFieldValue,
     handleSubmit,
   } = formik;
-
-  console.log("formik values", values);
-  console.log("errors", errors);
-  console.log("touched values", touched);
 
   return (
     <Layout>
@@ -113,19 +117,9 @@ export const CreateLawyer = () => {
           >
             <div className="flex flex-col items-center gap-2 ">
               <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-                {/* <input
-                  // value={formLawyer.firstName}
-                  // onChange={(e) => onChangeForm("firstName", e.target.value)}
-                  type="text"
-                  {...getFieldProps("firstName")}
-                  name="firstName"
-                  placeholder="First Name"
-                /> */}
+                <label htmlFor="firstName">First Name</label>
                 <Input
-                  value={values.firstName}
-                  onChange={(e) =>
-                    setFieldValue("firstName", e.target.value.trim())
-                  }
+                  {...getFieldProps("firstName")}
                   onBlur={() => setFieldTouched("firstName", true)}
                   name="firstName"
                   placeholder="First Name"
@@ -133,8 +127,10 @@ export const CreateLawyer = () => {
                 {errors.firstName && (
                   <p className="text-red-600">{errors.firstName}</p>
                 )}
-                <input
+                <label htmlFor="lastName">Last Name</label>
+                <Input
                   {...getFieldProps("lastName")}
+                  onBlur={() => setFieldTouched("lastName", true)}
                   name="lastName"
                   type="text"
                   placeholder="Last Name"
@@ -143,13 +139,33 @@ export const CreateLawyer = () => {
                   <p className="text-red-600">{errors.lastName}</p>
                 )}
 
-                <input
+                {/* <input
                   {...getFieldProps("email")}
                   type="text"
                   placeholder="Email"
                   name="email"
                 />
-                {errors.email && <p className="text-red-600">{errors.email}</p>}
+                {errors.email && <p className="text-red-600">{errors.email}</p>} */}
+                <label htmlFor="description">Description</label>
+
+                <Input.TextArea {...getFieldProps("description")} />
+                <label htmlFor="dni">DNI</label>
+
+
+                <Input {...getFieldProps("dni")} placeholder="DNI" name="dni" />
+                {errors.dni && touched.dni && (
+                  <p className="text-red-600">{errors.dni}</p>
+                )}
+                <label htmlFor="phoneNumber">Phone</label>
+                <Input
+                  {...getFieldProps("phoneNumber")}
+                  name="phoneNumber"
+                  type="text"
+                  placeholder="Phone"
+                />
+                {errors.phoneNumber && touched.phoneNumber && (
+                  <p className="text-red-600">{errors.phoneNumber}</p>
+                )}
 
                 {/* <input
                   {...getFieldProps("speciality")}
@@ -163,45 +179,23 @@ export const CreateLawyer = () => {
                   <option value="laboral">Laboral</option>
                 </select> */}
                 <Select
-                  value={values.speciality}
-                  mode="multiple"
-                  onChange={(newValue) => setFieldValue("speciality", newValue)}
-                  options={[
-                    {
-                      label: "Civil",
-                      value: "civil",
-                    },
-                    {
-                      label: "Criminal",
-                      value: "criminal",
-                    },
-                    {
-                      label: "Laboral",
-                      value: "laboral",
-                    },
-                  ]}
+                  value={values.specialityId}
+                  onSelect={(newValue) => setFieldValue("specialityId", newValue)}
+                  options={specialityOptions}
                   placeholder="Speciality"
                 />
-                {errors.speciality && (
-                  <p className="text-red-600">{errors.speciality}</p>
+                {errors.specialityId && (
+                  <p className="text-red-600">{errors.specialityId}</p>
                 )}
 
-                <input
-                  {...getFieldProps("phone")}
-                  name="phone"
-                  type="text"
-                  placeholder="Phone"
-                />
-                {(errors.phone && touched.phone) && <p className="text-red-600">{errors.phone}</p>}
-
-                <input
-                  {...getFieldProps("location")}
+                <Input
+                  {...getFieldProps("cityId")}
                   type="text"
                   name="location"
                   placeholder="Location"
                 />
-                {errors.location && (
-                  <p className="text-red-600">{errors.location}</p>
+                {errors.cityId && (
+                  <p className="text-red-600">{errors.cityId}</p>
                 )}
 
                 {/* <InputNumber<number>
