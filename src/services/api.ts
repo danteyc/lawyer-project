@@ -8,20 +8,20 @@ export const apiLawyers = axios.create({
   baseURL: 'http://localhost:3000'
 })
 
-// mockApi.interceptors.request.use(function (config) {
-//   // Do something before request is sent
-//   const token = 'xas12312321'
-//   config.headers['Authorization'] = `Bearer ${token}`;
-//   return config;
-// }, function (error) {
-//   // Do something with request error
-//   return Promise.reject(error);
-// });
+apiLawyers.interceptors.request.use(function (config) {
+  // Do something before request is sent
+  const token = localStorage.getItem('token');
+  config.headers['Authorization'] = `Bearer ${token}`;
+  return config;
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
 
-// // TOKEN JWT TIENEN UN TIEMPO DE EXPIRACIÓN
+// TOKEN JWT TIENEN UN TIEMPO DE EXPIRACIÓN
 // mockApi.interceptors.response.use(function (response) {
 //   const statusCode = response.status;
-//   if(statusCode === 401) {
+//   if(statusCode === 401 && response.data.message === 'Token expired') {
 //     // FUNCION QUE TE REDIRIGA AL LOGIN COMO TAMBIÉN QUE TE BORRE
 //     // INFORMACIÓN DEL LOCALSTORAGE, COOKIES, ETC
 //   }
