@@ -54,7 +54,7 @@ export const ListLawyerPage: FunctionComponent = () => {
     {
       title: "Acciones",
       key: "actions",
-      render: (row: ILawyer) => {
+      render: () => {
         return (
           <div className="flex gap-6 text-lg">
             <button className="text-blue-500">

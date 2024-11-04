@@ -88,12 +88,6 @@ export const HomePage = () => {
           ))}
         </section>
       )}
-      {isError && (
-        <div className="text-red-500">
-          Ocurrió un error
-          {error?.message}
-        </div>
-      )}
       <div></div>
       <footer>
         <p className="text-center p-4 bg-[#3396D3] text-white">

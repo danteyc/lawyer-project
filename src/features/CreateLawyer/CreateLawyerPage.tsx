@@ -29,7 +29,7 @@ export const CreateLawyerPage = () => {
 
   const {
     mutateAsync: saveLawyer,
-    data,
+    // data,
     isLoading,
   } = useMutation({
     mutationFn: (body: IBodyLawyer) => {
