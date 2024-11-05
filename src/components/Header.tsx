@@ -1,16 +1,19 @@
+import { Link } from "react-router-dom";
+import { paths } from "../routes/paths";
+
 export const Header = () => {
   return (
     <div
       id="header"
       className="p-4 flex justify-between items-center bg-[#3396D3]"
     >
-      <div>
+      <Link to={paths.home}>
         <img
           width={35}
           src="https://static.vecteezy.com/system/resources/thumbnails/044/812/167/small/sophisticated-law-firm-logo-on-transparent-background-png.png"
           alt=""
         />
-      </div>
+      </Link>
       <nav>
         <ul className="flex gap-2 text-white">
           <li>

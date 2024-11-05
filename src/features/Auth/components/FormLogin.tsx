@@ -6,9 +6,13 @@ import { loginApi } from "../../../services/Auth";
 import { ILogin } from "../../../services/Auth/auth.interfaces";
 import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { userStore } from "../../../store/user/user.store";
+import { paths } from "../../../routes/paths";
 
 export const FormLogin = () => {
   const navigation = useNavigate();
+
+  const {setUser, setAuthenticated} = userStore()
 
   const formik = useFormik({
     initialValues,
@@ -24,9 +28,12 @@ export const FormLogin = () => {
       return loginApi(dataLogin);
     },
     onSuccess: (data) => {
+      console.log("DATa from response login", data)
+      setUser(data.user)
+      setAuthenticated(true)
       localStorage.setItem("token", data.token);
       // console.log("DATA FROM ONSUCCESS", data)
-      navigation("/");
+      navigation(paths.listLawyer);
     }
   });
 

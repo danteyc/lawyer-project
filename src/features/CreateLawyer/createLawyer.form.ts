@@ -7,7 +7,8 @@ export const initialValues: IFormLawyer = {
   phoneNumber: "",
   cityId: 1,
   dni: "",
-  description: ""
+  description: "",
+  image: ""
 }
 
 export interface IFormLawyer{
@@ -17,7 +18,8 @@ export interface IFormLawyer{
   phoneNumber: string;
   dni: string;
   cityId: number | null;
-  description: string
+  description: string;
+  image?: string
 }
 
 export const LawyerSchema = Yup.object().shape({
@@ -27,5 +29,6 @@ export const LawyerSchema = Yup.object().shape({
   phoneNumber: Yup.string().length(9, "Debe ser de 9 dígitos").required("Teléfono es requerido"),
   dni: Yup.string().length(8, "Dni debe ser de 8 caracteres").required("DNI es requerido"),
   cityId: Yup.number().required("Ciudad es requerida"),
-  description: Yup.string().required("Descripción es requerida")
+  description: Yup.string().required("Descripción es requerida"),
+  image: Yup.string()
 })

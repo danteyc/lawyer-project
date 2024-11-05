@@ -11,6 +11,7 @@ export interface ILawyer {
   updatedAt:   Date;
   City:        ICity;
   Specialty:   ICity;
+  image?: string;
 }
 
 export interface ICity {

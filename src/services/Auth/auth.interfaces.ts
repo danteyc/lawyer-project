@@ -3,8 +3,11 @@ export interface IUser {
   lastName:  string;
   city:      string;
   email:     string;
-  password:  string;
-  role:      'admin' | 'guest';
+  role:      'admin' | 'guest' | null;
+}
+
+export interface IUserRegister extends IUser {
+  password: string;
 }
 
 export interface ILogin {
@@ -15,4 +18,5 @@ export interface ILogin {
 export interface IResponseLogin {
   message: string;
   token:   string;
+  user: IUser;
 }

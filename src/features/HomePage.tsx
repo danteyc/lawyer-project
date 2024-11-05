@@ -1,39 +1,62 @@
 import { Button, Pagination, Select, Spin } from "antd";
 import { Header } from "../components/Header";
 import { Card } from "../components/Card";
-// import { useEffect, useState } from "react";
-// import { ILawyer } from "../interfaces/lawyer.interface";
-// import { toast } from 'react-toastify';
-// import { mockApi } from "../services/api";
+
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { locationOptions, specialityOptions } from "../utils/options";
-import { getLawyers } from "../services/Lawyer";
+import { getLawyers, searchLawyers } from "../services/Lawyer";
+import { userStore } from "../store/user/user.store";
+import { getCities } from "../services/City";
+import { getSpecialties } from "../services/Specialty";
 
 export const HomePage = () => {
   // const [isActive, setIsActive] = useState(false);
-  const [page, setPage] = useState(1);
+  const { user, isAuthenticated } = userStore();
+
   const [filters, setFilters] = useState({
-    location: "1",
-    speciality: "1",
+    location: 1,
+    speciality: 1,
   });
-  const handleChange = (name: "location" | "speciality", value: string) => {
+
+  const { data: responseSpecialties } = useQuery(
+    ["getSpecialties"],
+    getSpecialties
+  );
+
+  const { data: responseCities } = useQuery(["getCities"], getCities, {
+    staleTime: 1000 * 60 * 10,
+  });
+
+  const specialityOptions = responseSpecialties?.specialties?.map(
+    (specialty) => ({
+      label: specialty.name,
+      value: specialty.id,
+    })
+  );
+
+  const cityOptions = responseCities?.map((city) => ({
+    label: city.name,
+    value: city.id,
+  }));
+
+  const handleChange = (name: "location" | "speciality", value: number) => {
     setFilters((filters) => ({
       ...filters,
       [name]: value,
     }));
   };
 
-  const {
-    data,
-
-    isFetching: isLoading,
-  } = useQuery(["getLawyers",page, filters], () => getLawyers(), {
-    // refetchInterval: .1 * 60 * 1000
-    staleTime: 20 * 60 * 1000,
-  });
-
-  console.log("data", data)
+  const { data, isFetching: isLoading, refetch } = useQuery(
+    ["getLawyers"],
+    () => searchLawyers({
+      cityId: filters.location,
+      specialtyId: filters.speciality,
+    }),
+    {
+      staleTime: 20 * 60 * 1000,
+    }
+  );
 
   // const {data: dataSingleLawyer} = useQuery(["getSingleLawyer"], () => getLawyer("1"))
 
@@ -54,7 +77,7 @@ export const HomePage = () => {
           <Select
             style={{ width: 160 }}
             onChange={(newValue) => handleChange("location", newValue)}
-            options={locationOptions}
+            options={cityOptions}
             placeholder="Ubicación"
             value={filters.location}
           />
@@ -65,13 +88,9 @@ export const HomePage = () => {
             placeholder="Especialidad"
             value={filters.speciality}
           />
-          <Button type="primary">Buscar</Button>
+          <Button type="primary" onClick={() => refetch()}>Buscar</Button>
         </div>
       </section>
-      <div>
-        <Pagination total={20} pageSize={2} defaultCurrent={1} onChange={(page) => setPage(page)} />
-      </div>
-
       {isLoading ? (
         <div className="w-full h-full flex items-center justify-center py-5 flex-col gap-3">
           <p className="text-gray-700 text-center">Cargando Abogados</p>
@@ -85,9 +104,9 @@ export const HomePage = () => {
           {data?.lawyers.map((lawyer) => (
             <Card key={lawyer.id} lawyer={lawyer} />
           ))}
+          <div></div>
         </section>
       )}
-      <div></div>
       <footer>
         <p className="text-center p-4 bg-[#3396D3] text-white">
           © 2024 Derechos Reservados

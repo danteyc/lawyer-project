@@ -5,6 +5,8 @@ import {
   Button,
   Input,
   Select,
+  Upload,
+  UploadProps,
 } from "antd";
 import { useFormik } from "formik";
 import { IFormLawyer, initialValues, LawyerSchema } from "./createLawyer.form";
@@ -96,6 +98,27 @@ export const CreateLawyerPage = () => {
     handleSubmit,
   } = formik;
 
+  const props: UploadProps = {
+    name: 'image',
+    action: 'http://localhost:3000/upload',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        const url = info.file.response.data.url;
+        setFieldValue("image", url);
+      }
+      if (info.file.status === 'done') {
+        console.log(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        console.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
+
+
   console.log("values", values);
 
   return (
@@ -178,6 +201,9 @@ export const CreateLawyerPage = () => {
             />
             {errors.cityId && <p className="text-red-600">{errors.cityId}</p>}
           </div>
+          <Upload {...props}>
+            <Button>Click to Upload</Button>
+          </Upload>
           <div className="col-span-2 flex justify-center">
             <Button
               loading={isLoading}

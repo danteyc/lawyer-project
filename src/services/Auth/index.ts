@@ -1,7 +1,7 @@
 import { apiLawyers } from "../api"
-import { ILogin, IResponseLogin, IUser } from "./auth.interfaces"
+import { ILogin, IResponseLogin, IUserRegister } from "./auth.interfaces"
 
-export const registerApi = async (body: IUser) => {
+export const registerApi = async (body: IUserRegister) => {
   const response = await apiLawyers.post('/auth/register', body)
   return response.data;
 }
