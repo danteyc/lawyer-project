@@ -26,8 +26,7 @@ export const HomePage = () => {
 
   const {
     data,
-    isError,
-    error,
+
     isFetching: isLoading,
   } = useQuery(["getLawyers",page, filters], () => getLawyers(), {
     // refetchInterval: .1 * 60 * 1000

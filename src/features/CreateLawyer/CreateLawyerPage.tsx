@@ -7,7 +7,7 @@ import {
   Select,
 } from "antd";
 import { useFormik } from "formik";
-import { initialValues, LawyerSchema } from "./createLawyer.form";
+import { IFormLawyer, initialValues, LawyerSchema } from "./createLawyer.form";
 import { getSpecialties } from "../../services/Specialty";
 import { getCities } from "../../services/City";
 import { createLawyer } from "../../services/Lawyer";
@@ -32,7 +32,7 @@ export const CreateLawyerPage = () => {
     // data,
     isLoading,
   } = useMutation({
-    mutationFn: (body: IBodyLawyer) => {
+    mutationFn: (body: IFormLawyer) => {
       return createLawyer(body);
     },
   });
